@@ -189,6 +189,11 @@ export async function fetchCustomers() {
   }
 }
 
+export async function fetchCustomersGraphql(){
+ 
+  
+}
+
 export async function fetchFilteredCustomers(query: string){
   try {
     const data = await sql<CustomersTableType>`
