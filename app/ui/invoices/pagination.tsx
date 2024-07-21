@@ -10,8 +10,15 @@ export default function Pagination({ totalPages }: { totalPages: number }) {
   // NOTE: Uncomment this code in Chapter 11
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  let currentPage : number;
-  if(searchParams){ currentPage = Number(searchParams.get('page'))}else{ currentPage = 1};
+  let currentPage : number = 1;
+  if(searchParams){ 
+    currentPage = Number(searchParams.get('page')) == 0 ? 1: Number(searchParams.get('page')) ;
+    console.log(`searchParams is ${searchParams} and current page is ${currentPage}`);
+
+  }else{ 
+    console.log(`No searchParams is ${searchParams} and current page is ${currentPage}`);
+    currentPage = 1
+  };
 
   const createPageURL = (pageNumber: number | string) => {
     if(searchParams){
@@ -19,7 +26,7 @@ export default function Pagination({ totalPages }: { totalPages: number }) {
       params.set('page', pageNumber.toString());
       return `${pathname}?${params.toString()}`;
     }else{
-      return '';
+      return `${pathname}?page=1`;;
     }
   };
 
@@ -38,6 +45,7 @@ export default function Pagination({ totalPages }: { totalPages: number }) {
 
         <div className="flex -space-x-px">
           {allPages.map((page, index) => {
+            console.log(`page is ${page} and current page is ${currentPage}`);
             let position: 'first' | 'last' | 'single' | 'middle' | undefined;
 
             if (index === 0) position = 'first';
@@ -51,7 +59,7 @@ export default function Pagination({ totalPages }: { totalPages: number }) {
                 href={createPageURL(page)}
                 page={page}
                 position={position}
-                isActive={currentPage === page}
+                isActive={currentPage == page}
               />
             );
           })}

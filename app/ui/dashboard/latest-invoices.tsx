@@ -28,26 +28,25 @@ export default async function LatestInvoices() {
                   },
                 )}
               >
-                <div className="flex items-center">
+                <div className="flex items-center" key={invoice.id}>
                   <Image
                     src={invoice.image_url}
                     alt={`${invoice.name}'s profile picture`}
                     className="mr-4 rounded-full"
                     width={32}
                     height={32}
+                    key={invoice.id}
                   />
-                  <div className="min-w-0">
-                    <p className="truncate text-sm font-semibold md:text-base">
+                  <div className="min-w-0" key={invoice.id}>
+                    <p className="truncate text-sm font-semibold md:text-base" key={invoice.id}>
                       {invoice.name}
                     </p>
-                    <p className="hidden text-sm text-gray-500 sm:block">
+                    <p className="hidden text-sm text-gray-500 sm:block" key={invoice.id}>
                       {invoice.email}
                     </p>
                   </div>
                 </div>
-                <p
-                  className={`${lusitana.className} truncate text-sm font-medium md:text-base`}
-                >
+                <p className={`${lusitana.className} truncate text-sm font-medium md:text-base`} key={invoice.id}>
                   {invoice.amount}
                 </p>
               </div>

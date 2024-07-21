@@ -12,7 +12,7 @@ export default async function InvoicesTable({
   currentPage: number;
 }) {
   const invoices = await fetchFilteredInvoices(query, currentPage);
-  fetchPromise().then(value =>{console.log('hello world '+JSON.stringify(value))}).catch(err =>{console.log(err)});
+  //fetchPromise().then(value =>{console.log('hello world '+JSON.stringify(value))}).catch(err =>{console.log(err)});
 
   return (
     <div className="mt-6 flow-root">

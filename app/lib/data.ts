@@ -6,6 +6,7 @@ import {
   InvoicesTable,
   LatestInvoiceRaw,
   Revenue,
+  User
 } from './definitions';
 import { formatCurrency } from './utils';
 
@@ -176,7 +177,9 @@ export async function fetchCustomers() {
     const data = await sql<CustomerField>`
       SELECT
         id,
-        name
+        name,
+        image_url,
+        email
       FROM customers
       ORDER BY name ASC
     `;
@@ -189,9 +192,22 @@ export async function fetchCustomers() {
   }
 }
 
-export async function fetchCustomersGraphql(){
- 
-  
+export async function fetchStudentsGraphql(){
+  const payload = await fetch(
+    "http://localhost:9000/graphql",
+    {
+      method: "POST",
+      body: JSON.stringify({
+        query: '{students {fullName}}',
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  ).then((res) => {return res.json()}).catch(err => console.log('err is '+err));
+
+  //console.log('data is '+JSON.stringify(data));
+  return payload.data.students;  
 }
 
 export async function fetchFilteredCustomers(query: string){
