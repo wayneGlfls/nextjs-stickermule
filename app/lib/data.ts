@@ -162,7 +162,7 @@ export async function fetchInvoiceById(id: string) {
     const invoice = data.rows.map((invoice) => ({
       ...invoice,
       // Convert amount from cents to dollars
-      amount: invoice.amount / 100,
+      amount: invoice.amount*100 / 100,
     }));
 
     return invoice[0];
@@ -170,6 +170,33 @@ export async function fetchInvoiceById(id: string) {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch invoice.');
   }
+}
+
+export async function fetchInvoicesByCustomerId(cusomerId: string){
+  try {
+    const data = await sql<InvoicesTable>`
+      SELECT
+        invoices.id,
+        invoices.customer_id,
+        invoices.amount,
+        invoices.status,
+        invoices.date
+      FROM invoices
+      WHERE invoices.customer_id = ${cusomerId};
+    `;
+
+    const invoices = data.rows.map((invoice) => ({
+      ...invoice,
+      // Convert amount from cents to dollars
+      amount: invoice.amount*100 / 100,
+    }));
+
+    return invoices;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch invoice.');
+  }
+
 }
 
 export async function fetchCustomers() {

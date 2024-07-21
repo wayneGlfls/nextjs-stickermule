@@ -11,7 +11,8 @@ export const authConfig = {
       if (isOnDashboard) {
         if (isLoggedIn) return true;
         return false; // Redirect unauthenticated users to login page
-      } else if (isLoggedIn) {
+      } else if (isLoggedIn && nextUrl.pathname.startsWith('/login')) {
+        //comment this out to have seperate segment route 
         return Response.redirect(new URL('/dashboard', nextUrl));
       }
       return true;
