@@ -1,7 +1,7 @@
 import {fetchStudentsGraphql,fetchCustomers} from "../../lib/data";
 import { lusitana } from '@/app/ui/fonts';
 import PopUpParent from "@/app/ui/customers/popUpParent";
-import { CustomersTable } from "@/app/ui/customers/table";
+import CustomersTable  from "@/app/ui/customers/table";
 
 interface student {
   fullName: string;
