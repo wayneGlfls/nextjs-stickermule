@@ -34,9 +34,11 @@ export default function Pagination({ totalPages }: { totalPages: number }) {
   const currentPage = Number(searchParams!.get('page')) || 1;
 
   const createPageURL = (pageNumber: number | string) => {
-    const params = new URLSearchParams(searchParams!);
-    params.set('page', pageNumber.toString());
-    return `${pathname}?${params.toString()}`;
+    //const params = new URLSearchParams(searchParams!);
+    //params.set('page', pageNumber.toString());
+
+    const searchURL = `?page=${pageNumber.toString()}`; 
+    return `${pathname}${searchURL}`;
   };
   
 
@@ -47,7 +49,6 @@ export default function Pagination({ totalPages }: { totalPages: number }) {
   return (
     <>
       {/*  NOTE: Uncomment this code in Chapter 11 */}
-
       { <div className="inline-flex">
         <PaginationArrow
           direction="left"
@@ -57,7 +58,7 @@ export default function Pagination({ totalPages }: { totalPages: number }) {
 
         <div className="flex -space-x-px">
           {allPages.map((page, index) => {
-            console.log(`page is ${page} and current page is ${currentPage}`);
+            //console.log(`page is ${page} and current page is ${currentPage}`);
             let position: 'first' | 'last' | 'single' | 'middle' | undefined;
 
             if (index === 0) position = 'first';
