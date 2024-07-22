@@ -10,6 +10,7 @@ export default function Pagination({ totalPages }: { totalPages: number }) {
   // NOTE: Uncomment this code in Chapter 11
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  /*
   let currentPage : number = 1;
   if(searchParams){ 
     currentPage = Number(searchParams.get('page')) == 0 ? 1: Number(searchParams.get('page')) ;
@@ -20,7 +21,7 @@ export default function Pagination({ totalPages }: { totalPages: number }) {
     currentPage = 1
   };
 
-  const createPageURL = (pageNumber: number | string) => {
+    const createPageURL = (pageNumber: number | string) => {
     if(searchParams){
       const params = new URLSearchParams(searchParams);
       params.set('page', pageNumber.toString());
@@ -29,6 +30,17 @@ export default function Pagination({ totalPages }: { totalPages: number }) {
       return `${pathname}?page=1`;;
     }
   };
+  */
+  const currentPage = Number(searchParams.get('page')) || 1;
+
+  const createPageURL = (pageNumber: number | string) => {
+    const params = new URLSearchParams(searchParams);
+    params.set('page', pageNumber.toString());
+    return `${pathname}?${params.toString()}`;
+  };
+  
+
+
 
   const allPages = generatePagination(currentPage, totalPages);
 
@@ -140,5 +152,3 @@ function PaginationArrow({
     </Link>
   );
 }
-
-const tenction = () =>  '123';
