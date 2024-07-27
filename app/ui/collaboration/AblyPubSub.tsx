@@ -4,29 +4,29 @@ import * as Ably from 'ably';
 import { AblyProvider, ChannelProvider, useChannel, useConnectionStateListener } from 'ably/react';
 import { createChatMessage } from '@/app/lib/actions';
 
-// Define the user structure
+// Define the User type
 interface User {
     id: string;
     email: string;
     name: string;
-    image_url?: string;
+    image_url: string;
 }
 
-// Define the message structure
+// Define the AblyMessage type
 interface AblyMessage {
     name: string;
     data: string;
     image_url?: string;
 }
 
-interface AblyClientProps {
+interface AblyPubSubProps {
     messagehistory: AblyMessage[];
     user: User;
 }
 
 const client = new Ably.Realtime({ key: 'B7e_xw.YPknJg:rwaLF8JQmwNzLuYZ4ugsglgl7J87OC3vmgxsk6EbRXc' });
 
-function AblyPubSub({ messagehistory, user }: AblyClientProps) {
+function AblyPubSub({ messagehistory, user }: AblyPubSubProps) {
     const [messages, setMessages] = useState<AblyMessage[]>(messagehistory);
     const [txt, setTxt] = useState("");
     const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -47,10 +47,17 @@ function AblyPubSub({ messagehistory, user }: AblyClientProps) {
         console.log('Connected to Ably!');
     });
 
-    const { channel } = useChannel('get-started', (message: AblyMessage) => {
-        // Add image URL from map
-        message.image_url = myMap.get(message.name);
-        setMessages(prevMessages => [...prevMessages, message]);
+    // Adjusted the callback type to match Ably.Message
+    const { channel } = useChannel('get-started', (message: Ably.Message) => {
+        // Type guard for Ably.Message
+        if (message.data && typeof message.data === 'string') {
+            const ablyMessage: AblyMessage = {
+                name: message.name || '',
+                data: message.data,
+                image_url: myMap.get(message.name || '')
+            };
+            setMessages(prevMessages => [...prevMessages, ablyMessage]);
+        }
     });
 
     const publishMessage = (e: React.FormEvent<HTMLFormElement>) => {
@@ -60,10 +67,10 @@ function AblyPubSub({ messagehistory, user }: AblyClientProps) {
 
         if (messageString.trim()) {
             const message: AblyMessage = { name: user.name, data: messageString };
-            const savedmessage = { user, data: messageString };
+            const savedMessage = { user, data: messageString };
 
             channel.publish(message);
-            createChatMessage(savedmessage)
+            createChatMessage(savedMessage)
                 .then(() => console.log('Message saved'))
                 .catch(err => console.log('Error: ' + err));
 
@@ -105,7 +112,7 @@ function AblyPubSub({ messagehistory, user }: AblyClientProps) {
     );
 }
 
-export function AblyClient({ messagehistory, user }: AblyClientProps) {
+export function AblyClient({ messagehistory, user }: AblyPubSubProps) {
     return (
         <AblyProvider client={client}>
             <ChannelProvider channelName="get-started">
