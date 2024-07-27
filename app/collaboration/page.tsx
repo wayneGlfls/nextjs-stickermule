@@ -10,7 +10,7 @@ interface User {
     id: string;
     email: string;
     name: string;
-    image_url?: string;
+    image_url: string;
 }
 
 export default async function Page() {
@@ -19,7 +19,14 @@ export default async function Page() {
 
     // Authenticate the user and get user details
     const session = await auth();
-    const user = await getUIUser(session?.user.email);
+
+    // Check if session and session.user are defined
+    if (!session?.user?.email) {
+        // Handle the case where session or session.user.email is not available
+        return <div>Error: Unable to authenticate user</div>;
+    }
+
+    const user = await getUIUser(session.user.email);
 
     // Check if user is defined
     if (!user) {
