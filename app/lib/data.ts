@@ -7,7 +7,10 @@ import {
   LatestInvoiceRaw,
   Revenue,
   User,
-  FormattedCustomersTable
+  FormattedCustomersTable,
+  ChatMessage,
+  ChatRoom,
+  ChatMessageTable
 } from './definitions';
 import { formatCurrency } from './utils';
 
@@ -270,3 +273,30 @@ export async function fetchFilteredCustomers(query: string){
     throw new Error('Failed to fetch customer table.');
   }
 }
+
+
+export async function fetchChatMessage(){
+  try {
+    const data = await sql<ChatMessageTable>`
+      SELECT
+        chatmessages.id,
+        chatmessages.data,
+        chatmessages.date,
+        chatmessages.customer_id,
+        chatmessages.chatroom_id,
+        users.name,
+        users.email,
+        users.image_url
+      FROM chatmessages
+      JOIN users ON chatmessages.customer_id = users.id
+      order by date desc
+    `;
+
+    const ChatMessages = data.rows;
+    return ChatMessages;
+  } catch (err) {
+    console.error('Database Error:', err);
+    throw new Error('Failed to fetch all ChatMessage.');
+  }
+}
+

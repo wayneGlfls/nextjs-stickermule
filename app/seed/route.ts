@@ -1,6 +1,6 @@
   import bcrypt from 'bcrypt';
   import { db } from '@vercel/postgres';
-  import { invoices, customers, revenue, users } from '../lib/placeholder-data';
+  import { invoices, customers, revenue, users, chatmessages, chatrooms } from '../lib/placeholder-data';
 
   const client = await db.connect();
 
@@ -11,7 +11,8 @@
         id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
         email TEXT NOT NULL UNIQUE,
-        password TEXT NOT NULL
+        password TEXT NOT NULL,
+        image_url VARCHAR(255)
       );
     `;
 
@@ -19,8 +20,8 @@
       users.map(async (user) => {
         const hashedPassword = await bcrypt.hash(user.password, 10);
         return client.sql`
-          INSERT INTO users (id, name, email, password)
-          VALUES (${user.id}, ${user.name}, ${user.email}, ${hashedPassword})
+          INSERT INTO users (id, name, email, password,image_url)
+          VALUES (${user.id}, ${user.name}, ${user.email}, ${hashedPassword}, ${user.image_url})
           ON CONFLICT (id) DO NOTHING;
         `;
       }),
@@ -28,6 +29,7 @@
 
     return insertedUsers;
   }
+
 
   async function seedInvoices() {
     await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
@@ -101,13 +103,56 @@
     return insertedRevenue;
   }
 
+  async function seedChatMessages(){
+    await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
+
+    await client.sql`
+      CREATE TABLE IF NOT EXISTS chatmessages (
+        id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+        customer_id UUID NOT NULL,
+        data VARCHAR(255) NOT NULL,
+        date DATE NOT NULL,
+        chatroom_id UUID NOT NULL
+      );
+    `;
+
+    const insertedChatmsgs = await Promise.all(
+      chatmessages.map(
+        (chatmsg) => client.sql`
+          INSERT INTO chatmessages (customer_id, data, date,chatroom_id)
+          VALUES (${chatmsg.customer_id}, ${chatmsg.data}, ${chatmsg.date},${chatmsg.chatroom_id})
+          ON CONFLICT (id) DO NOTHING;
+        `,
+      ),
+    );
+
+    return insertedChatmsgs;
+  }
+
+  async function deleteChatmesssges(){
+    await client.sql`
+      DELETE * FROM chatmessages
+      ;
+    `;
+  }
+
+  async function dropTable(){
+    const result = await client.sql`DROP TABLE users;`;
+  }
+  async function seedChatRoom(){
+
+  }
+  
 export async function GET() {
     try {
       await client.sql`BEGIN`;
-      await seedUsers();
-      await seedCustomers();
-      await seedInvoices();
-      await seedRevenue();
+      //await seedUsers();
+      //await seedCustomers();
+      //await seedInvoices();
+      //await seedRevenue();
+      //await seedChatMessages();
+      //await dropTable();      
+      await deleteChatmesssges();
       await client.sql`COMMIT`;
 
       return Response.json({ message: 'Database seeded successfully' });

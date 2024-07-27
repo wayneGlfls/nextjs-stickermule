@@ -6,7 +6,7 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { signIn } from '@/auth';
 import { AuthError } from 'next-auth';
-
+import { User } from './definitions';
 
 export type State = {
   errors?: {
@@ -32,7 +32,6 @@ const FormSchema = z.object({
 });
 
 const CreateInvoice = FormSchema.omit({ id: true, date: true });
-
 export async function createInvoice(prevState: State, formData: FormData) {
     const validatedFields = CreateInvoice.safeParse({
       customerId: formData.get('customerId'),
@@ -67,11 +66,39 @@ export async function createInvoice(prevState: State, formData: FormData) {
 
 }
 
+export async function createChatMessage(ChatMessage:any){
+  //console.log(JSON.stringify(ChatMessage));
+  //console.log('username is '+ChatMessage.user.name);
+  const name = ChatMessage.user.id;
+  //console.log('user id is '+ChatMessage.user.id);
+  const data = ChatMessage.data;
+  const date = new Date().toISOString().split('T')[0];
+  const chatroom_id = '1ca73037-6587-4066-bf2f-8dda600f3d39';
+  try{
+    const saveresult = await sql`
+    INSERT INTO chatmessages(customer_id,data,date,chatroom_id)
+    VALUES (${name},${data},${date},${chatroom_id})
+  `;
+    //console.log(`saveresult is ${saveresult}`);
+  }catch(error){
+    return {
+      message: 'Database Error: Failed to save chat messages.',
+    };
+  }
+
+};
+
+export async function getUser(name:string){
+  try {
+    const user = await sql<User>`SELECT * FROM users WHERE name=${name}`;
+    return user.rows[0];
+  } catch (error) {
+    console.error('Failed to fetch user:', error);
+    throw new Error('Failed to fetch user.');
+  }
+}
 // Use Zod to update the expected types
-const UpdateInvoice = FormSchema.omit({ id: true, date: true });
- 
-// ...
- 
+const UpdateInvoice = FormSchema.omit({ id: true, date: true }); 
 export async function updateInvoice(
   id: string,
   prevState: State,
@@ -117,8 +144,6 @@ export async function deleteInvoice(id: string) {
 
   revalidatePath('/dashboard/invoices');
 }
-
- 
 // ...
  
 export async function authenticate(

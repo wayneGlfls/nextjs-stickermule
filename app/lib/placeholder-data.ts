@@ -3,10 +3,25 @@
 const users = [
   {
     id: '410544b2-4001-4271-9855-fec4b6a6442a',
-    name: 'User',
-    email: 'user@nextmail.com',
-    password: '123456',
+    name: 'bruce lee',
+    email: 'bruce.lee@nextmail.com',
+    password: 'NBQzyjNW1234',
+    image_url: '/customers/evil-rabbit.png'
   },
+  {
+    id: '410544b2-4002-4272-9875-fec4b6a6443a',
+    name: 'John Smith',
+    email: 'john.smith@nextmail.com',
+    password: 'xiongkai666',
+    image_url: '/customers/delba-de-oliveira.png'
+  },
+  {
+    id: '410523b2-4111-4241-9865-fec4b6a6442b',
+    name: 'Dave Norris',
+    email: 'Dave.Norris@nextmail.com',
+    password: 'xiongki666',
+    image_url: '/customers/lee-robinson.png'
+  }
 ];
 
 const customers = [
@@ -144,4 +159,15 @@ const revenue = [
   { month: 'Dec', revenue: 4800 },
 ];
 
-export { users, customers, invoices, revenue };
+const chatmessages = [
+  {customer_id:customers[0].id,data:'Hi, how are you?',date:'2023-06-07',chatroom_id:'1ca73037-6587-4066-bf2f-8dda600f3d39'},
+  {customer_id:customers[0].id,data:'This platofrm looks great!',date:'2023-06-07',chatroom_id:'1ca73037-6587-4066-bf2f-8dda600f3d39'},
+  {customer_id:customers[1].id,data:'I completely agree with your point',date:'2023-06-07',chatroom_id:'1ca73037-6587-4066-bf2f-8dda600f3d39'}
+];
+
+const chatrooms = [
+  {id:'1ca73037-6587-4066-bf2f-8dda600f3d39',customer_ids:[],romm_name:'Collaboration Space'}
+
+];
+
+export { users, customers, invoices, revenue, chatmessages, chatrooms };

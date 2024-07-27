@@ -36,7 +36,6 @@ export default function Pagination({ totalPages }: { totalPages: number }) {
   const createPageURL = (pageNumber: number | string) => {
     //const params = new URLSearchParams(searchParams!);
     //params.set('page', pageNumber.toString());
-
     const searchURL = `?page=${pageNumber.toString()}`; 
     return `${pathname}${searchURL}`;
   };

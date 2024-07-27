@@ -89,3 +89,30 @@ export type InvoiceForm = {
   amount: number;
   status: 'pending' | 'paid';
 };
+
+
+export type ChatMessage = {
+  id: string;
+  customer_id: string;
+  data: string;
+  date: string;
+  chatroom_id: string;
+};
+
+export type ChatMessageTable = {
+  id: string;
+  customer_id: string;
+  data: string;
+  date: string;
+  chatroom_id: string;
+  name: string;
+  email: string;
+  image_url: string;
+};
+
+
+export type ChatRoom = {
+  id: string;
+  customer_ids: string[];
+  romm_name: string;
+};

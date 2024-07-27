@@ -15,10 +15,18 @@ export const authConfig = {
       } else if (isLoggedIn && (nextUrl.pathname == '/dashboard' || nextUrl.pathname.includes('/login') ) ) {
         //comment this out to have seperate segment route 
         return Response.redirect(new URL('/dashboard', nextUrl));
+      } else if(!isLoggedIn){
+        return false;
       }
       return true;
       
     },
+    async session({ session, token, user }) {
+      // Send properties to the client, like an access_token and user id from a provider.
+      session.accessToken = token.accessToken;
+      session.user.id = token.id;
+      return session
+    }
   },
   providers: [], // Add providers with an empty array for now
 } satisfies NextAuthConfig;
