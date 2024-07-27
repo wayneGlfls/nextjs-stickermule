@@ -1,7 +1,7 @@
 'use server';
 
 import { AblyClient } from "../ui/collaboration/AblyPubSub";
-import { fetchCustomers, fetchChatMessage } from "../lib/data";
+import { fetchChatMessage } from "../lib/data";
 import { ChatMessageTable } from "../lib/definitions";
 import { getUIUser, auth } from "auth";
 
@@ -10,7 +10,7 @@ interface User {
     id: string;
     email: string;
     name: string;
-    image_url: string;
+    image_url?: string;
 }
 
 export default async function Page() {
@@ -19,7 +19,13 @@ export default async function Page() {
 
     // Authenticate the user and get user details
     const session = await auth();
-    const user: User = await getUIUser(session.user.email);
+    const user = await getUIUser(session?.user.email);
+
+    // Check if user is defined
+    if (!user) {
+        // Handle the case where user is not found
+        return <div>Error: User not found</div>;
+    }
 
     return (
         <>

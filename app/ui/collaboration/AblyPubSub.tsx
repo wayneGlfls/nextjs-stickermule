@@ -9,7 +9,7 @@ interface User {
     id: string;
     email: string;
     name: string;
-    image_url: string;
+    image_url?: string;
 }
 
 // Define the message structure
