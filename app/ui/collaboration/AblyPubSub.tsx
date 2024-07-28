@@ -11,7 +11,6 @@ interface User {
     name: string;
     image_url: string;
 }
-
 // Define the AblyMessage type
 interface AblyMessage {
     name: string;
