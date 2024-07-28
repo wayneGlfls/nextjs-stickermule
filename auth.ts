@@ -6,6 +6,7 @@ import { sql } from '@vercel/postgres';
 import type { User } from '@/app/lib/definitions';
 import bcrypt from 'bcrypt';
 import Google from "next-auth/providers/google";
+import { NextAuthResult } from 'next-auth';
  
 export async function getUser(email: string | undefined | null): Promise<User | undefined> {
   try {
@@ -27,7 +28,6 @@ export async function getUIUser(email: string | undefined | null): Promise<User 
   }
 }
 
- 
 export const { auth, signIn, signOut, handlers } = NextAuth({
   ...authConfig,
   providers: [
@@ -53,5 +53,6 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
       },
     }),
     Google
-  ],
+  ]
 });
+

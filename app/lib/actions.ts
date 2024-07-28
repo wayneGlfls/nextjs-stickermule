@@ -151,7 +151,9 @@ export async function authenticate(
   formData: FormData,
 ) {
   try {
-    await signIn('credentials', formData);
+    const email = formData.get('email');
+    const password = formData.get('password');
+    await signIn('credentials',  { redirectTo: '/dashboard', email, password });
   } catch (error) {
     if (error instanceof AuthError) {
       switch (error.type) {
@@ -164,3 +166,5 @@ export async function authenticate(
     throw error;
   }
 }
+
+
