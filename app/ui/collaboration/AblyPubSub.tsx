@@ -24,7 +24,8 @@ interface AblyPubSubProps {
     user: User;
 }
 
-const client = new Ably.Realtime({ key: 'B7e_xw.YPknJg:rwaLF8JQmwNzLuYZ4ugsglgl7J87OC3vmgxsk6EbRXc' });
+//const client = new Ably.Realtime({ key: 'B7e_xw.YPknJg:rwaLF8JQmwNzLuYZ4ugsglgl7J87OC3vmgxsk6EbRXc' });
+const client = new Ably.Realtime({ key: process.env.NEXT_PUBLIC_ABLY_API_KEY });
 
 function AblyPubSub({ messagehistory, user }: AblyPubSubProps) {
     const [messages, setMessages] = useState<AblyMessage[]>(messagehistory);
